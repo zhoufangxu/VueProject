@@ -1,27 +1,35 @@
 <template>
-<div id='app'>
-  <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal" @select="handleSelect">
-  <el-menu-item>
-    <img src="../assets/logo.png" class="img-style">
-  </el-menu-item>
-  <el-menu-item index="1">发现音乐</el-menu-item>
-  <el-menu-item index="2">我的音乐</el-menu-item> 
-  <el-menu-item index="3">朋友</el-menu-item>
-  <el-menu-item index="4">商城</el-menu-item>
-  <el-menu-item index="5">音乐人</el-menu-item>
-  <el-menu-item index="6">下载客户端</el-menu-item>
-  <el-menu-item>
-    <input type="text" placeholder="音乐/电台/用户" class="userInput">
-    <span class="center">创作中心</span>
-  </el-menu-item>
-  <el-menu-item>
-    <span class="login">登陆</span>
-  </el-menu-item>
-</el-menu>
+<div>
+  <div id='app'>
+    <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
+    <el-menu-item>
+      <img src="../assets/logo.png" class="img-style">
+    </el-menu-item>
+    <el-menu-item index="1">发现音乐</el-menu-item>
+    <el-menu-item index="2">我的音乐</el-menu-item> 
+    <el-menu-item index="3">朋友</el-menu-item>
+    <el-menu-item index="4">商城</el-menu-item>
+    <el-menu-item index="5">音乐人</el-menu-item>
+    <el-menu-item index="6">下载客户端</el-menu-item>
+    <el-menu-item>
+      <input type="text" placeholder="音乐/电台/用户" class="userInput">
+      <span class="center">创作中心</span>
+    </el-menu-item>
+    <el-menu-item>
+      <span class="login">登陆</span>
+    </el-menu-item>
+  </el-menu>
+  </div>
+  <Banner />
 </div>
+
 </template>
 <script>
+import Banner from "../components/banner";
 export default {
+  components:{
+    Banner
+  },
   data(){
     return {
       activeIndex: '1'
@@ -50,7 +58,7 @@ a{
   text-decoration: none;
 } 
 #app .ul-box{
-  width: 1440px;
+  width: 1000px;
   margin: 0 auto;
 }
 .img-style{
@@ -66,7 +74,7 @@ a{
   border-radius: 100px;
   padding-left: 10px;
   margin-right: 20px;
-  margin-left: 30px;
+  margin-left: 10px;
 }
 .center{
   margin-left: 20px;
