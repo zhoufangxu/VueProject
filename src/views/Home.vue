@@ -12,11 +12,13 @@
     <el-menu-item index="5">音乐人</el-menu-item>
     <el-menu-item index="6">下载客户端</el-menu-item>
     <el-menu-item>
-      <input type="text" placeholder="音乐/电台/用户" class="userInput">
+      <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
       <span class="center">创作中心</span>
     </el-menu-item>
     <el-menu-item>
-      <span class="login">登陆</span>
+      <router-link to="/login">
+        <span class="login">登陆</span>
+      </router-link>
     </el-menu-item>
   </el-menu>
   </div>
@@ -32,11 +34,16 @@ export default {
   },
   data(){
     return {
-      activeIndex: '1'
+      activeIndex: '1',
+      textInput: '',
     };
   },
   methods: {
-   
+   userInput(){
+     console.log(this.textInput);
+     this.textInput = '';
+     this.$router.push("/search");
+   }
   }
 }
 </script>
