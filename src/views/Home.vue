@@ -16,8 +16,9 @@
       <span class="center">创作中心</span>
     </el-menu-item>
     <el-menu-item>
-      <router-link to="/login">
-        <span class="login">登陆</span>
+      <router-link :to="isLogin?'/login':''">
+        <span class="login" v-if="isLogin">登陆</span>
+        <span class="login" v-if="!isLogin">{{userMsg.user_name}}</span>
       </router-link>
     </el-menu-item>
   </el-menu>
@@ -36,6 +37,8 @@ export default {
     return {
       activeIndex: '1',
       textInput: '',
+      isLogin: true,
+      userMsg: [],
     };
   },
   methods: {
@@ -44,6 +47,22 @@ export default {
      this.textInput = '';
      this.$router.push("/search");
    }
+  },
+  created(){
+    //判断当前用户是否登录
+    this.$axios.get(`/isLogin`)
+     .then(res=>{
+       console.log(res);
+       if(res.data.code == 1){
+         this.isLogin = false;
+       }else{
+         this.isLogin = true;
+       }
+       this.userMsg = res.data.data[0]
+     })
+     .catch(err=>{
+       console.log(err);
+     })
   }
 }
 </script>
@@ -80,7 +99,7 @@ a{
   width: 140px;
   border-radius: 100px;
   padding-left: 10px;
-  margin-right: 20px;
+  margin-right: 15px;
   margin-left: 10px;
 }
 .center{
