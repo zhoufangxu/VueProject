@@ -18,7 +18,7 @@
         </div>
     </div>
 </template>
-
+
 <style>
     .box{
         display: flex;
