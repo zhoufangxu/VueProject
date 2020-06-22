@@ -10,28 +10,46 @@
     <el-menu-item index="3">朋友</el-menu-item>
     <el-menu-item index="4">商城</el-menu-item>
     <el-menu-item index="5">音乐人</el-menu-item>
-    <el-menu-item index="6">下载客户端</el-menu-item>
     <el-menu-item>
       <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
       <span class="center">创作中心</span>
     </el-menu-item>
-    <el-menu-item>
+    <el-menu-item class="userNameBox" v-if="isLogin">
       <router-link :to="isLogin?'/login':''">
-        <span class="login" v-if="isLogin">登陆</span>
-        <span class="login" v-if="!isLogin">{{userMsg.user_name}}</span>
+        <span class="login">登陆</span>
       </router-link>
     </el-menu-item>
+     <el-submenu index="7" v-if="!isLogin">
+      <template slot="title">
+        <span class="login">{{userMsg.user_name}}</span>
+      </template>
+      <el-menu-item index="7-1">
+         <img src="../assets/default.png">
+      </el-menu-item>
+      <el-menu-item index="7-2">
+        {{userMsg.email}}
+      </el-menu-item>
+      <el-menu-item index="7-3">
+        <span @click="outLogin">退出</span>
+      </el-menu-item>
+    </el-submenu>
   </el-menu>
   </div>
   <Banner />
+  <Icon />
+  <MyImage />
 </div>
 
 </template>
 <script>
 import Banner from "../components/banner";
+import Icon from '../components/index/icon';
+import MyImage from '../components/index/Image';
 export default {
   components:{
-    Banner
+    Banner,
+    Icon,
+    MyImage,
   },
   data(){
     return {
@@ -46,13 +64,37 @@ export default {
      console.log(this.textInput);
      this.textInput = '';
      this.$router.push("/search");
-   }
+   },
+   //退出登陆
+   outLogin(){
+     this.$confirm('确定退出', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$axios.get('/logout')
+        .then(res=>{
+        if(res.data.code == 1){
+          this.$alert('退出成功', {
+            confirmButtonText: '确定',
+          });
+          this.isLogin = true;
+        }
+       }).catch(err=>{
+         console.log(err);
+       })
+       }).catch(() => {
+         this.$message({
+           type: 'info',
+           message: '已取消退出'
+        });          
+       });
+    }
   },
   created(){
     //判断当前用户是否登录
     this.$axios.get(`/isLogin`)
      .then(res=>{
-       console.log(res);
        if(res.data.code == 1){
          this.isLogin = false;
        }else{
@@ -96,19 +138,28 @@ a{
   display: inline-block;
   background-color: #e3e4e5;
   height: 26px;
-  width: 140px;
+  width: 130px;
   border-radius: 100px;
   padding-left: 10px;
   margin-right: 15px;
   margin-left: 10px;
 }
 .center{
-  margin-left: 20px;
+  margin-left: 10px;
   border: 1px solid #e3e4e5;
   padding: 2px 14px;
   border-radius: 50px;
 }
 .login{
   font-size: 14px;
+}
+.userNameBox{
+  position: relative;
+}
+.user-item{
+  position: absolute;
+  z-index: 999;
+  border: 1px solid #e1e1e1;
+  padding: 10px;
 }
 </style>
