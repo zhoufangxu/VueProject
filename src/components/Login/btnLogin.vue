@@ -67,7 +67,11 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
+    a{
+        text-decoration: none;
+        color: #747474;
+    }
     .box{
         display: flex;
         flex-direction: column;
@@ -106,6 +110,7 @@ export default {
         cursor: pointer;
         margin-top: 10px;
         margin-bottom: 20px;
+        text-align: center;
     }
     .login-btn>button{
         color: #fff;

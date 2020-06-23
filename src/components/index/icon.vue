@@ -24,7 +24,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .icon{
         border-bottom: 1px solid #e1e1e1;
     }

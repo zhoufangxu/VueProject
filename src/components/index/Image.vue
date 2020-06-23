@@ -18,7 +18,6 @@ export default {
     created(){
         this.$axios.get('/indexImage')
         .then(res=>{
-            console.log(res);
             this.imgList = res.data;
         }).catch(err=>{
             console.log(err);

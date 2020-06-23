@@ -67,12 +67,13 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 body{
   text-align: center;
 }
 a{
   color: #747474;
+  text-decoration: none;
 }
 .login-title{
   width: 1000px;

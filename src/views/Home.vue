@@ -1,55 +1,63 @@
 <template>
-<div>
-  <div id='app'>
-    <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
-    <el-menu-item>
-      <img src="../assets/logo.png" class="img-style">
-    </el-menu-item>
-    <el-menu-item index="1">发现音乐</el-menu-item>
-    <el-menu-item index="2">我的音乐</el-menu-item> 
-    <el-menu-item index="3">朋友</el-menu-item>
-    <el-menu-item index="4">商城</el-menu-item>
-    <el-menu-item index="5">音乐人</el-menu-item>
-    <el-menu-item>
-      <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
-      <span class="center">创作中心</span>
-    </el-menu-item>
-    <el-menu-item class="userNameBox" v-if="isLogin">
-      <router-link :to="isLogin?'/login':''">
-        <span class="login">登陆</span>
-      </router-link>
-    </el-menu-item>
-     <el-submenu index="7" v-if="!isLogin">
-      <template slot="title">
-        <span class="login">{{userMsg.user_name}}</span>
-      </template>
-      <el-menu-item index="7-1">
-         <img src="../assets/default.png">
+  <div>
+    <div id='app'>
+      <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
+      <el-menu-item>
+        <img src="../assets/logo.png" class="img-style">
       </el-menu-item>
-      <el-menu-item index="7-2">
-        {{userMsg.email}}
+      <el-menu-item index="1">发现音乐</el-menu-item>
+      <el-menu-item index="2">我的音乐</el-menu-item> 
+      <el-menu-item index="3">朋友</el-menu-item>
+      <el-menu-item index="4">商城</el-menu-item>
+      <el-menu-item index="5">音乐人</el-menu-item>
+      <el-menu-item>
+        <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
+        <span class="center">创作中心</span>
       </el-menu-item>
-      <el-menu-item index="7-3">
-        <span @click="outLogin">退出</span>
+      <el-menu-item class="userNameBox" v-if="isLogin">
+        <router-link :to="isLogin?'/login':''">
+          <span class="login">登陆</span>
+        </router-link>
       </el-menu-item>
-    </el-submenu>
-  </el-menu>
+      <el-submenu index="7" v-if="!isLogin">
+        <template slot="title">
+          <span class="login">{{userMsg.user_name}}</span>
+        </template>
+        <el-menu-item index="7-1">
+          <img src="../assets/default.png">
+        </el-menu-item>
+        <el-menu-item index="7-2">
+          {{userMsg.email}}
+        </el-menu-item>
+        <el-menu-item index="7-3">
+          <span @click="outLogin">退出</span>
+        </el-menu-item>
+      </el-submenu>
+    </el-menu>
+    </div>
+    <Banner />
+    <Icon />
+    <MyImage />
+    <Recommend />
+    <HotProduct />
+    <Footer />
   </div>
-  <Banner />
-  <Icon />
-  <MyImage />
-</div>
-
 </template>
 <script>
 import Banner from "../components/banner";
 import Icon from '../components/index/icon';
 import MyImage from '../components/index/Image';
+import Recommend from "../components/index/recommend";
+import HotProduct from '../components/index/HotProduct';
+import Footer from "../components/index/footer";
 export default {
   components:{
     Banner,
     Icon,
     MyImage,
+    Recommend,
+    HotProduct,
+    Footer,
   },
   data(){
     return {
@@ -110,7 +118,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 #app .el-menu.el-menu--horizontal{
   border-bottom: none;
 }
@@ -161,5 +169,8 @@ a{
   z-index: 999;
   border: 1px solid #e1e1e1;
   padding: 10px;
+}
+.el-menu-item{
+  text-align: center;
 }
 </style>

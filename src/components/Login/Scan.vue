@@ -23,7 +23,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .login-box-container{
         display: flex;
         flex-direction: column;
