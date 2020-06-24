@@ -4,7 +4,7 @@
             <h1>编辑推荐</h1>
             <ul class="list">
                 <li v-for="(item, index) of List" :key="index" class="list-item">
-                    <router-link to="#">
+                    <router-link :to="`info/${item.lid}`">
                         <img :src="'http://127.0.0.1:3000/' + item.md" :data-index="index" @mouseenter="signIn" @mouseout="signOut" :class="isActive == index ? 'active' : '' ">
                         <p>{{item.title}}</p>
                         <span class="price">¥{{item.price.toFixed(2)}}</span>

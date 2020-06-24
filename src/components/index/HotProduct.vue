@@ -4,13 +4,16 @@
             <h1>热门商品</h1>
             <ul>
                 <li v-for="(item, index) of dataList" :key="index">
-                    <router-link to="#">
+                    <router-link to="info">
                         <img :src=" 'http://127.0.0.1:3000/' + item.md">
+                        <p>{{item.title}}</p>
+                        <span>¥{{item.price.toFixed(2)}}</span>
                     </router-link>
-                    <p>{{item.title}}</p>
-                    <span>¥{{item.price.toFixed(2)}}</span>
                 </li>
             </ul>
+            <div v-if="hasMore" class="loadIcon">
+                <i class="el-icon-loading"></i>
+            </div>
         </div>
     </div>
 </template>
@@ -27,10 +30,13 @@ export default {
     },
     methods:{
         loadMore(){
-            this.pno ++;
+          if(this.dataList.length === 43){
+              this.hasMore = false;
+              return;
+          }
+          this.pno ++;
           this.$axios.get(`/products?pno=${this.pno}&pageSize=${this.pageSize}`)
             .then(res => {
-                console.log(res);
                 this.dataList = this.dataList.concat(res.data.data);
             })
             .catch(err => {
@@ -65,16 +71,20 @@ export default {
     .container>ul{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: left;
         flex-wrap: wrap;
     }
     .container>ul>li{
         width: 190px;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        margin-left: 5px;
+        margin-right: 5px;
     }
     .container>ul>li img{
-        width: 100%;
+        width: 80%;
         transition: all 0.6s;
+        display: block;
+        margin: 0 auto;
     }
     .container>ul>li img:hover{
         transform: scale(1.1);
@@ -90,5 +100,11 @@ export default {
     .container>ul>li span{
         color: #f00;
         font-weight: bold;
+    }
+    .loadIcon{
+        color: #e1e1e1;
+        font-size: 36px;
+        margin-top: 16px;
+        text-align: center;
     }
 </style>
