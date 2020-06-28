@@ -1,24 +1,24 @@
 <template>
-    <div id='app'>
-      <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
-        <el-menu-item>
-            <img src="../assets/logo.png" class="img-style">
-        </el-menu-item>
-        <el-menu-item index="1">发现音乐</el-menu-item>
-        <el-menu-item index="2">我的音乐</el-menu-item> 
-        <el-menu-item index="3">朋友</el-menu-item>
-        <el-menu-item index="4">商城</el-menu-item>
-        <el-menu-item index="5">音乐人</el-menu-item>
-        <el-menu-item>
-            <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
-            <span class="center" @click="goCart">购物车</span>
-        </el-menu-item>
-        <el-menu-item class="userNameBox" v-if="isLogin">
+  <div id='app'>
+    <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
+      <el-menu-item>
+          <img src="../assets/logo.png" class="img-style">
+      </el-menu-item>
+      <el-menu-item index="1">发现音乐</el-menu-item>
+      <el-menu-item index="2">我的音乐</el-menu-item> 
+      <el-menu-item index="3">朋友</el-menu-item>
+      <el-menu-item index="4">商城</el-menu-item>
+      <el-menu-item index="5">音乐人</el-menu-item>
+      <el-menu-item>
+          <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
+          <span class="center" @click="goCart">购物车</span>
+      </el-menu-item>
+        <el-menu-item class="userNameBox" v-show="isLogin">
             <router-link :to=" isLogin ? 'login' : '' ">
-            <span class="login">登陆</span>
+              <span class="login">登陆</span>
             </router-link>
         </el-menu-item>
-        <el-submenu index="7" v-if="!isLogin">
+        <el-submenu index="7" v-show="!isLogin">
             <template slot="title">
             <span class="login">{{userMsg.user_name}}</span>
             </template>
@@ -32,8 +32,8 @@
             <span @click="outLogin">退出</span>
             </el-menu-item>
         </el-submenu>
-      </el-menu>
-    </div>
+    </el-menu>
+  </div>
 </template>
 
 <script>
@@ -80,7 +80,7 @@ export default {
     //跳转购物车Btn
     goCart(){
      this.$router.push("cart");
-    }
+    },
   },
   created(){
     //判断当前用户是否登录
@@ -96,7 +96,7 @@ export default {
      .catch(err=>{
        console.log(err);
      })
-  }
+  },
 }
 </script>
 

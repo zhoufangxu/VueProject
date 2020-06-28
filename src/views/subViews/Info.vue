@@ -7,8 +7,8 @@
                 <el-breadcrumb-item>活动列表</el-breadcrumb-item>
                 <el-breadcrumb-item>活动详情</el-breadcrumb-item>
             </el-breadcrumb>
-            <Info :data=data />
         </div>
+        <Info :list=list />
     </div>
 </template>
 
@@ -20,10 +20,10 @@ export default {
     },
     data(){
         return {
-            data: {},
+            list: {},
         }
     },
-    created(){
+    mounted(){
         this.loadDetails();
     },
     methods:{
@@ -31,8 +31,7 @@ export default {
             let lid = this.$route.params.lid
             this.$axios.get(`/detalis?lid=${lid}`)
              .then(res=>{
-               console.log(res.data);
-               this.data = res.data;
+               this.list = res.data;
              })
              .catch(err => {
                  console.log(err);

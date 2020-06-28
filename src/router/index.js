@@ -15,18 +15,12 @@ Vue.use(VueRouter)
   const routes = [
     {
       path: '/',
-      name: 'Home',
       component: Home,
       children: [
         {
           path: '',
           component: Container,
         },
-        {
-          path: 'login',
-          name: 'Login',
-          component: Login
-        }, 
         {
           path: 'search',
           name: 'Search',
@@ -44,6 +38,11 @@ Vue.use(VueRouter)
         }
       ]
     },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    }, 
   ]
 
 const router = new VueRouter({

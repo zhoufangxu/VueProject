@@ -7,7 +7,7 @@
         </div>
         <div class="user-pwd">
             <i class="el-icon-s-goods"></i>
-            <input type="password" placeholder="请输入密码" v-model="userUpwd">
+            <input type="password" placeholder="请输入密码" v-model="userUpwd" @keyup.13="login">
             <i class="el-icon-close" data-name="upwd" @click="clearContent"></i>
         </div>
         <div class="pwd">
