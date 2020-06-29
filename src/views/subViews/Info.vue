@@ -8,15 +8,19 @@
                 <el-breadcrumb-item>活动详情</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
-        <Info :list=list />
+        <!-- 向子组件传递一个事件 -->
+        <Info :list=list  @fatherMethod="loadDetails" />
+        <InfoBottom :list=list />
     </div>
 </template>
 
 <script>
 import Info from "../../components/info/InfoContainer";
+import InfoBottom from '../../components/info/infoBottom';
 export default {
     components:{
-        Info
+        Info,
+        InfoBottom
     },
     data(){
         return {

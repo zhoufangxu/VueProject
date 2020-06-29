@@ -14,7 +14,7 @@
           <span class="center" @click="goCart">购物车</span>
       </el-menu-item>
         <el-menu-item class="userNameBox" v-show="isLogin">
-            <router-link :to=" isLogin ? 'login' : '' ">
+            <router-link :to=" isLogin ? '/login' : '' ">
               <span class="login">登陆</span>
             </router-link>
         </el-menu-item>
