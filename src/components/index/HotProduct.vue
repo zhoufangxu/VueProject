@@ -4,7 +4,7 @@
             <h1>热门商品</h1>
             <ul>
                 <li v-for="(item, index) of dataList" :key="index">
-                    <router-link to="info">
+                    <router-link :to="`info/${item.lid}`">
                         <img :src=" 'http://127.0.0.1:3000/' + item.md">
                         <p>{{item.title}}</p>
                         <span>¥{{item.price.toFixed(2)}}</span>

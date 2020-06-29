@@ -50,7 +50,7 @@ export default {
    userInput(){
      console.log(this.textInput);
      this.textInput = '';
-     this.$router.push("search");
+     this.$router.push("/search");
    },
    //退出登陆
    outLogin(){

@@ -23,7 +23,7 @@ Vue.use(VueRouter)
         },
         {
           path: 'search',
-          name: 'Search',
+          name: 'search',
           component: Search
         }, 
         {
@@ -42,7 +42,7 @@ Vue.use(VueRouter)
       path: '/login',
       name: 'Login',
       component: Login
-    }, 
+    },
   ]
 
 const router = new VueRouter({
