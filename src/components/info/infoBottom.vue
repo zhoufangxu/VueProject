@@ -78,7 +78,7 @@ export default {
     },
     props:['list'],
     created(){
-        console.log(this);
+        console.log(this.list);
     }
 }
 </script>

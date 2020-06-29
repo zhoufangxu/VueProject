@@ -30,22 +30,12 @@
             </div>
             
             <div class="specs">
-<<<<<<< HEAD
-                <ul>
-                    <li>
-                        <router-link to="#">
-
-                        </router-link>
-                    </li>
-                </ul>
-=======
                 <div class="promise">规格:</div>
                 <div class="spec-list">
                   <router-link v-for="(item, index) of list.specs" :key="index" :class="`${item.lid == $route.params.lid ? 'spec-active' : ''}`" :to="`/info/${item.lid}`">
                     {{item.spec}}
                   </router-link>
                 </div>
->>>>>>> a25df498029c7f028709f6b4dc2b21b2b1e28a76
             </div>
             <div class="count-box">
                 <span class="promise">数量:</span>
