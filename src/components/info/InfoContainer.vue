@@ -25,7 +25,7 @@
             <div class="specs">
                 <ul>
                     <li>
-                        <router-link>
+                        <router-link to="#">
 
                         </router-link>
                     </li>
