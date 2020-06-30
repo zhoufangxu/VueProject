@@ -37,7 +37,7 @@
         <div class="product-box">
           <el-tabs type="border-card">
             <el-tab-pane label="商品详情">
-                <ul class="product-spec">
+                <ul class="product-spec" v-if="list.product !== undefined">
                     <li>
                         <span>商品名称 : </span>
                         <span>os : {{list.product.os}}</span>
@@ -65,7 +65,7 @@
           </el-tabs>
         </div>
         <!-- details -->
-        <div class="detalis" v-html="list.product.details"></div>
+        <div v-if="list.product !== undefined" class="detalis" v-html="list.product.details"></div>
     </div>
 </template>
 
@@ -77,9 +77,6 @@ export default {
         }
     },
     props:['list'],
-    created(){
-        console.log(this.list);
-    }
 }
 </script>
 

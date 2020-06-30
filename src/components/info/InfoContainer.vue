@@ -1,6 +1,6 @@
 <template>
     <div class="Info-container">
-        <div class="left">
+        <div class="left" v-if="list.pics !== undefined">
             <div class="img-box">
                 <img :src=" imgUrl + list.pics[imgMd].md">
                 <div class="magnifier" v-show="isMask" :style="{top:mask.top,left:mask.left}"></div>
@@ -21,7 +21,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <div class="right">
+        <div class="right" v-if="list.product !== undefined">
             <div class="title">{{list.product.title}}</div>
             <div class="subtitle">{{list.product.subtitle}}</div>
             <div>
