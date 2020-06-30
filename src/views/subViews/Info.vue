@@ -10,7 +10,7 @@
         </div>
         <!-- 向子组件传递一个事件 -->
         <Info :list=list  @fatherMethod="loadDetails" />
-        <InfoBottom :list=list />
+        <InfoBottom :list=list :details=details />
     </div>
 </template>
 
@@ -25,23 +25,32 @@ export default {
     data(){
         return {
             list: {},
+            details: [],
         }
     },
-    mounted(){
+    created(){
         this.loadDetails();
     },
     methods:{
-         loadDetails(){
-            let lid = this.$route.params.lid
-            this.$axios.get(`/detalis?lid=${lid}`)
-             .then(res=>{
-               this.list = res.data;
-             })
-             .catch(err => {
-                 console.log(err);
-             })
+        loadDetails(){
+          let lid = this.$route.params.lid
+          this.$axios.get(`/detalis?lid=${lid}`)
+           .then(res=>{
+              this.list = res.data;
+              let serverUrl = 'http://127.0.0.1:3000/';
+              let reg = /(?<=(src="))[^"]*?(?=")/ig;
+              let allSrc = res.data.product.details.match(reg);
+              let all = [];
+              for (const item of allSrc) {
+                  all.push(serverUrl + item);
+              }
+              this.details = all;
+            })
+            .catch(err => {
+              console.log(err);
+            })
         },
-    }
+    },
 }
 </script>
 

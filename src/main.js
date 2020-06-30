@@ -12,8 +12,24 @@ axios.defaults.baseURL ='http://127.0.0.1:3000';
 axios.defaults.withCredentials = true;
 Vue.prototype.$axios = axios;
 
-
 Vue.config.productionTip = false
+
+//8: main.js 创建日期过滤器
+Vue.filter("datetimeFilter", function (val) {
+  //8.1:创建日期对象
+  var date = new Date(val);
+  //8.2:获取年 月 日 时 分 秒
+  var y = date.getFullYear(); //年份
+  var m = date.getMonth() + 1; //月份0~11
+  var d = date.getDate(); //日
+  var h = date.getHours();
+  var mi = date.getMinutes();
+  var s = date.getSeconds();
+  //8.3:返回字符串 y-m-d h:mi:s
+  m < 10 && (m = "0" + m);
+  d < 10 && (d = "0" + d);
+  return `${y}-${m}-${d} ${h}:${mi}:${s}`;
+});
 
 new Vue({
   router,

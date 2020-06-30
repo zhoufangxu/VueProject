@@ -2,7 +2,9 @@
   <div id='app'>
     <el-menu :default-active="activeIndex" class="el-menu-demo ul-box" mode="horizontal">
       <el-menu-item>
+        <router-link to="/">
           <img src="../assets/logo.png" class="img-style">
+        </router-link>
       </el-menu-item>
       <el-menu-item index="1">发现音乐</el-menu-item>
       <el-menu-item index="2">我的音乐</el-menu-item> 
@@ -79,7 +81,7 @@ export default {
     },
     //跳转购物车Btn
     goCart(){
-     this.$router.push("cart");
+     this.$router.push("/cart");
     },
   },
   created(){

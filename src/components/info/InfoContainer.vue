@@ -90,7 +90,19 @@ export default {
         },
         //加入购物车
         addCart(){
-            console.log('加入购物车')
+            let pid = this.$route.params.lid;
+            let count = this.count;
+            let price = this.list.product.price;
+            this.$axios.get(`/addcart?pid=${pid}&count=${count}&price=${price}`)
+            .then(res => {
+                this.$message({
+                    message: '添加成功',
+                    type: 'success'
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            })
         },
         //鼠标进入小图片
         signIn(e){
