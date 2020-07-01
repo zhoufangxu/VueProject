@@ -9,12 +9,14 @@
         </div>
         <!-- 购物车内容 -->
         <div class="cart-container">
-            <h2>全部商品{{allCount}}</h2>
+            <h2>全部商品{{cartCount}}</h2>
             <div class="title">
                 <el-row>
                     <el-col :span="3">
                         <div class="grid-content bg-purple-dark title-style">
-                            <el-radio v-model="radio" label="1">全选</el-radio>
+                        <div class="allSelect">
+                            <input type="checkbox" :checked="checkedAll" @click="changeVal">全选
+                        </div>
                         </div>
                     </el-col>
                     <el-col :span="10">
@@ -38,7 +40,7 @@
                 <el-row>
                     <el-col :span="3">
                         <div class="grid-content bg-purple-dark title-style">
-                            <el-radio v-model="radio"></el-radio>
+                            <input type="checkbox" @click="changeItem" :checked="item.cb" :data-i="index">
                         </div>
                     </el-col>
                     <el-col :span="10">
@@ -49,13 +51,15 @@
                         </div>
                     </el-col>
                     <el-col :span="3">
-                        <div class="grid-content bg-purple-dark title-style">¥{{item.price.toFixed(2)}}</div>
+                        <div class="grid-content bg-purple-dark title-style">¥{{ parseInt(item.price).toFixed(2)}}</div>
                     </el-col>
                     <el-col :span="3">
-                        <div class="grid-content bg-purple-dark title-style">{{item.count}}</div>
+                        <button class="count-btn">-</button>
+                        <span class="count">{{item.count}}</span>
+                        <button class="count-btn">+</button>
                     </el-col>
                     <el-col :span="3">
-                        <div class="grid-content bg-purple-dark title-style price">¥{{item.price.toFixed(2)}}</div>
+                        <div class="grid-content bg-purple-dark title-style price">¥{{parseInt(item.price).toFixed(2)}}</div>
                     </el-col>
                     <el-col :span="2">
                         <div class="grid-content bg-purple-dark title-style">
@@ -65,6 +69,24 @@
                 </el-row>
             </div>
         </div>
+        <!-- 底部内容 -->
+        <div class="cart-bootm">
+            <el-row>
+                <el-col :span="12">
+                    <div class="allbox">
+                        <div class="allSelect">
+                            <input type="checkbox" :checked="checkedAll" @click="changeVal">全选
+                        </div>
+                        <span style="cursor: pointer;" @click="delItems">删除选中商品</span>
+                    </div>
+                </el-col>
+                <el-col :span="12" class="settlement">
+                    <span>已选中<span class="select-count">{{number}}</span>件商品</span>
+                    <div>总价<span class="select-count">¥{{notes.toFixed(2)}}</span></div>
+                    <div class="settlement-btn">去结算</div>
+                </el-col>
+            </el-row>
+        </div>
     </div>
 </template>
 
@@ -72,22 +94,63 @@
 export default {
     data(){
         return {
-            allCount: 10,
             radio: '0',
-            cartList: [],
+            checkedAll: false,  //全选按钮状态
         }
     },
     methods:{
+        //选中一个商品
+        changeItem(e){
+           var cb = e.target.checked;
+           var i = e.target.dataset.i;
+           this.cartList[i].cb = cb;
+           //复选框点击时获得cb为true的个数
+           var count = 0;
+           for(var item of this.cartList){
+              if(item.cb){
+                count++;
+              }
+           }
+           if(count == this.cartList.length){
+              this.checkedAll = true;
+           }else{
+              this.checkedAll = false;
+           }
+        },
+        //选中全部商品
+        changeVal(e){
+            var cb = e.target.checked;
+            this.checkedAll = cb;
+            for(var item of this.cartList){
+                item.cb = cb;
+            }
+        },
+        //获取购物车数据
         getCartList(){
             this.$axios.get('/cartlist')
              .then(res => {
-                 console.log(res.data)
-                 this.cartList = res.data.data;
+               //判断用户有没有登陆
+               if(res.data.code == -1){
+                   this.$alert('您还没有登陆', '提示', {
+                        confirmButtonText: '确定',
+                        callback: action => {
+                            this.$router.push('/login')
+                        }
+                    });
+               }
+               //将购物车数据保存到vuex中
+               let rows = res.data.data;
+               for (const item of rows) {
+                   item.cb = false;
+               }
+               this.$store.commit("updataCartList",rows);
+               this.$store.commit("updateCount",rows.length);
              })
              .catch(err => {
                  console.log(err);
              })
         },
+        //删除一个商品
         delItem(e){
             this.$confirm('是否删除该商品?', '提示', {
                 confirmButtonText: '确定',
@@ -112,7 +175,81 @@ export default {
                     message: '已取消删除'
                 });          
             });
-        }
+        },
+        //删除多个商品
+        delItems(){ 
+            var ids = "";
+            for(var item of this.cartList){
+              if(item.cb){
+                ids += item.id + ",";
+              }
+            }
+            ids = ids.substring(0,ids.length-1);
+            if(ids === ""){
+                this.$alert('至少选中一件商品', '提示', {
+                    confirmButtonText: '确定',
+                });
+                return;
+            }
+            this.$confirm('是否删除选中商品?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+            .then(() => {
+                this.$axios.get(`/removeMItem?ids=${ids}`)
+                .then(res => {
+                    if(res.data.code == 1){
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                        this.getCartList();
+                    }
+                })
+            })
+            .catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
+        },
+    },
+    computed:{
+        //获得购物车中商品数量
+        cartCount(){
+            return this.cartList.length;
+        },
+        //获取vuex中的购物车数据
+        cartList:function(){
+            return this.$store.getters.getCartList;
+        },
+        //计算选中的商品数量
+        number:function(){
+            //创建变量保存要结算商品的个数
+            var count = 0;
+            //遍历数组中cb为true的 累加
+            for(var item of this.cartList){
+                if(item.cb){
+                    count += item.count;
+                }
+            }
+            return count;
+        },
+        //计算商品总计
+        notes:function(){
+            //创建变量保存总计
+            var sum = 0;
+            //循环item中cb为true的产品的价格，累加到sum中
+            for(var item of this.cartList){
+                if(item.cb){
+                    sum += item.price*item.count;
+                }
+            }
+            //返回总计
+            return sum;
+        },
     },
     created(){
         this.getCartList()
@@ -189,5 +326,58 @@ export default {
      }
      .delBtn{
          cursor: pointer;
+     }
+     /* 底部结算 */
+     .cart-bootm{
+         border: 1px solid #e1e1e1;
+         color: #747474;
+         font-size: 14px;
+         padding-left: 10px;
+         height: 40px;
+         line-height: 40px;
+     }
+     .settlement{
+         display: flex;
+         justify-content: flex-end;
+     }
+     .settlement>span{
+         margin-right: 20px;
+     }
+     .select-count{
+         font-weight: bold;
+         color: #f00;
+         margin: 0 3px;
+         font-size: 18px;
+     }
+     .settlement-btn{
+         margin-left: 20px;
+         background: #f00;
+         color: #fff;
+         padding: 0 20px;
+         cursor: pointer;
+     }
+     .allSelect{
+         width: 50px;
+         display: flex;
+         cursor: pointer;
+         justify-content: left;
+         align-items: center;
+         margin-right: 20px;
+     }
+     .allbox{
+         display: flex;
+     }
+     .count-btn{
+         border: 1px solid #e1e1e1;
+         background: #fff;
+         width: 20px;
+         height: 20px;
+     }
+     .count{
+         display: inline-block;
+         width: 30px;
+         height: 20px;
+         text-align: center;
+         border: 1px solid #e1e1e1;
      }
 </style>
