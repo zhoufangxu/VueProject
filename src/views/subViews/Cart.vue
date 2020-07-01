@@ -54,9 +54,11 @@
                         <div class="grid-content bg-purple-dark title-style">¥{{ parseInt(item.price).toFixed(2)}}</div>
                     </el-col>
                     <el-col :span="3">
-                        <button class="count-btn">-</button>
-                        <span class="count">{{item.count}}</span>
-                        <button class="count-btn">+</button>
+                        <div class="cart-count">
+                            <button class="count-btn" @click="reduce" :data-pid="item.pid" :data-count="item.count" :data-i="index">-</button>
+                            <span class="count">{{item.count}}</span>
+                            <button class="count-btn" @click="add" :data-pid="item.pid" :data-i="index">+</button>
+                        </div>
                     </el-col>
                     <el-col :span="3">
                         <div class="grid-content bg-purple-dark title-style price">¥{{parseInt(item.price).toFixed(2)}}</div>
@@ -99,6 +101,39 @@ export default {
         }
     },
     methods:{
+        //购物车数量加
+        add(e){
+            var count = 1;
+            var pid = e.target.dataset.pid;
+            var i = e.target.dataset.i;
+            this.$axios.get(`/upDatecart?pid=${pid}&count=${count}`)
+            .then(res=>{
+                this.$store.commit("upCartListCountAdd",i);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        //购物车数量减
+        reduce(e){
+            var itemCount = e.target.dataset.count;
+            var count = -1;
+            var pid = e.target.dataset.pid;
+            var i = e.target.dataset.i;
+            if(itemCount > 1){
+                this.$axios.get(`/upDatecart?pid=${pid}&count=${count}`)
+                .then(res=>{
+                   this.$store.commit("upCartListCountReduce",i);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            }else{
+                this.$alert('最少购买一件商品', '提示', {
+                    confirmButtonText: '确定',
+                });
+            }
+        },
         //选中一个商品
         changeItem(e){
            var cb = e.target.checked;
@@ -160,7 +195,7 @@ export default {
                 let id = e.target.dataset.id;
                 this.$axios.get(`/delCartItem?id=${id}`)
                  .then(res => {
-                     this.$message({
+                    this.$message({
                         type: 'success',
                         message: '删除成功!'
                     });
@@ -367,17 +402,23 @@ export default {
      .allbox{
          display: flex;
      }
+     .cart-count{
+         display: flex;
+         align-items: center;
+     }
      .count-btn{
          border: 1px solid #e1e1e1;
          background: #fff;
-         width: 20px;
-         height: 20px;
+         width: 24px;
+         height: 24px;
+         outline: none;
      }
      .count{
          display: inline-block;
          width: 30px;
-         height: 20px;
+         height: 22px;
          text-align: center;
-         border: 1px solid #e1e1e1;
+         border-top: 1px solid #e1e1e1;
+         border-bottom: 1px solid #e1e1e1;
      }
 </style>
