@@ -99,6 +99,7 @@ export default {
                     message: '添加成功',
                     type: 'success'
                 });
+                this.$store.commit("increment");
             })
             .catch(err => {
                 console.log(err);

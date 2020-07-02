@@ -155,6 +155,8 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="评价">
+                <!-- 评论组件 -->
+                <Comment />
                 <div v-for="(item, index) of commentList" :key="index" class="comment-box">
                     <div class="comment-user">
                         <div>
@@ -233,7 +235,11 @@
 </template>
 
 <script>
+import Comment from '../info/Comment';
 export default {
+    components:{
+        Comment,
+    },
     data(){
         return{
             commentList: [],
@@ -328,8 +334,9 @@ export default {
  /* 评论 */
  .comment-box{
      display: flex;
-     margin: 20px 0;
+     margin: 40px 0;
      align-items: flex-start;
+     margin-left: 50px;
  }
  .comment-user{
      display: flex;

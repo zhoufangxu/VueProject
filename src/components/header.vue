@@ -13,7 +13,14 @@
       <el-menu-item index="5">音乐人</el-menu-item>
       <el-menu-item>
           <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
-          <span class="center" @click="goCart">购物车</span>
+          <span class="center" @click="goCart">
+            <i class="el-icon-shopping-cart-full"></i>
+            购物车
+            <div class="bubble">
+              <!-- 获取xuex中的购物车商品数量 -->
+              <span class="cart_count">{{$store.getters.optCartCount}}</span>
+            </div>
+          </span>
       </el-menu-item>
         <el-menu-item class="userNameBox" v-show="isLogin">
             <router-link :to=" isLogin ? '/login' : '' ">
@@ -50,9 +57,8 @@ export default {
   },
   methods: {
    userInput(){
-     console.log(this.textInput);
+     this.$router.push(`/search/${this.textInput}`);
      this.textInput = '';
-     this.$router.push("/search");
    },
    //退出登陆
    outLogin(){
@@ -104,57 +110,76 @@ export default {
 
 <style scoped>
     #app .el-menu.el-menu--horizontal{
-    border-bottom: none;
+      border-bottom: none;
     }
     #app{
-    border-bottom: solid 1px #e6e6e6;
+      border-bottom: solid 1px #e6e6e6;
     }
     body{
-    margin: 0;
-    padding: 0;
-    text-align: right;
+      margin: 0;
+      padding: 0;
+      text-align: right;
     }
     a{
-    text-decoration: none;
+      text-decoration: none;
     } 
     #app .ul-box{
-    width: 1000px;
-    margin: 0 auto;
+      width: 1000px;
+      margin: 0 auto;
     }
     .img-style{
-    height: 30px;
+      height: 30px;
     }
     .userInput{
-    border:none;
-    outline: none;
-    display: inline-block;
-    background-color: #e3e4e5;
-    height: 26px;
-    width: 130px;
-    border-radius: 100px;
-    padding-left: 10px;
-    margin-right: 15px;
-    margin-left: 10px;
+      border:none;
+      outline: none;
+      display: inline-block;
+      background-color: #e3e4e5;
+      height: 26px;
+      width: 130px;
+      border-radius: 100px;
+      padding-left: 10px;
+      margin-right: 15px;
+      margin-left: 10px;
     }
     .center{
-    margin-left: 10px;
-    border: 1px solid #e3e4e5;
-    padding: 2px 14px;
-    border-radius: 50px;
+        margin-left: 10px;
+        border: 1px solid #e3e4e5;
+        padding: 6px 14px;
+        position: relative;
+    }
+    .center:hover{
+      border: 1px solid #f00;
     }
     .login{
-    font-size: 14px;
+      font-size: 14px;
     }
     .userNameBox{
-    position: relative;
+      position: relative;
     }
     .user-item{
-    position: absolute;
-    z-index: 999;
-    border: 1px solid #e1e1e1;
-    padding: 10px;
+      position: absolute;
+      z-index: 999;
+      border: 1px solid #e1e1e1;
+      padding: 10px;
     }
     .el-menu-item{
-    text-align: center;
+      text-align: center;
+    }
+    .bubble{
+      display:inline-block;
+      width: 20px;
+      height: 15px;
+      background: #f00;
+      border-radius: 20px;
+      position: absolute;
+      left: 27px;
+      top: 0;
+    }
+    .cart_count{
+      position: absolute;
+      top: -22px;
+      left: 6px;
+      color: #fff;
     }
 </style>

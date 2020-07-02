@@ -22,7 +22,7 @@ Vue.use(VueRouter)
           component: Container,
         },
         {
-          path: 'search',
+          path: 'search/:val',
           name: 'search',
           component: Search
         }, 
