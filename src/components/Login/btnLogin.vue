@@ -39,6 +39,8 @@ export default {
         },
         //登录验证
         login(e){
+            //正则验证密码格式
+            // var reg = /^[a-z0-9]{3,12}$/i;
             //获取用户名和密码
             let uname = this.userName, upwd = this.userUpwd;
             if(uname != '' && upwd != '' ){

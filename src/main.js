@@ -31,6 +31,12 @@ Vue.filter("datetimeFilter", function (val) {
   return `${y}-${m}-${d} ${h}:${mi}:${s}`;
 });
 
+//7.1:加载第三方模块 qs
+import qs from "qs";
+//7.2:配置qs模块,qs成为Vue属性 
+Vue.prototype.qs = qs;
+
+
 new Vue({
   router,
   store,
