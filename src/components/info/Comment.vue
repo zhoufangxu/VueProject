@@ -3,13 +3,13 @@
         <div class="rate">
             <span class="title">商品评分</span>
             <div>
-                <el-rate v-model="value" :colors="colors" show-score text-color="#f00"></el-rate>
+                <el-rate v-model="userInfo.value" :colors="colors" show-score text-color="#f00"></el-rate>
             </div>
         </div>
         <div class="comment">
             <span class="title">商品评价</span>
             <div>
-                <textarea cols="30" rows="10" placeholder="分享体验新得，给万千想买的人一个参考~" maxlength="500" v-model="textInput"></textarea>
+                <textarea cols="30" rows="10" placeholder="分享体验新得，给万千想买的人一个参考~" maxlength="500" v-model="userInfo.textInput"></textarea>
             </div>
         </div>
         <div class="upload">
@@ -22,6 +22,7 @@
             ref="upload"
             :on-success="afterUpload"
             name="file"
+            :data="userInfo"
             >
                 <i slot="default" class="el-icon-plus"></i>
                 <div slot="file" slot-scope="{file}">
@@ -51,7 +52,7 @@
             </el-dialog>
         </div>
         <div class="upload-btn">
-            <button @click="upload">上传</button>
+            <button @click="upload">发表</button>
         </div>
     </div>
 </template>
@@ -61,8 +62,10 @@
 export default {
     data(){
         return {
-            value: 0,
-            textInput: '',
+            userInfo: {
+               value: 0,
+               textInput: '',
+            },
             colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
             dialogImageUrl: '',
             dialogVisible: false,
@@ -74,10 +77,12 @@ export default {
       afterUpload(response, file, fileList){
           if(response.code == 1){
             this.$alert('发表成功', '提示', {
-            confirmButtonText: '确定',
+              confirmButtonText: '确定',
             });
           }
           fileList.length = 0;
+          this.userInfo.value = 0;
+          this.userInfo.textInput = '';
       },
       //文件上传
       upload(){
@@ -85,7 +90,11 @@ export default {
       },
       //删除文件
       handleRemove(file) {
-        console.log(file);
+        let fileList = this.$refs.upload.uploadFiles;
+        let index = fileList.findIndex( fileItem => {
+            return fileItem.uid === file.uid
+        })
+        fileList.splice(index, 1)
       },
       //文件预览
       handlePictureCardPreview(file) {

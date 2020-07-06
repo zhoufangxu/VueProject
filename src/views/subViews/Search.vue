@@ -12,6 +12,7 @@ export default {
         }
     },
     created(){
+        //接受参数
         let val = this.$route.params.val;
         console.log(val);
     }

@@ -12,7 +12,14 @@
       <el-menu-item index="4">商城</el-menu-item>
       <el-menu-item index="5">音乐人</el-menu-item>
       <el-menu-item>
+        <div class="search-box">
           <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
+          <ul class="search-list" v-if="showSearch">
+            <li v-for="(item, index) of list" :key="index">
+              <router-link to="#">{{item.lname}}</router-link>
+            </li>
+          </ul>
+        </div>
           <span class="center" @click="goCart">
             <i class="el-icon-shopping-cart-full"></i>
             购物车
@@ -53,12 +60,34 @@ export default {
       textInput: '',
       isLogin: true,
       userMsg: [],
+      list: [],
+      showSearch: false,
     };
   },
+  watch :{
+    textInput:function(){
+        this.getSearch();
+    }
+  },
   methods: {
+   //获取搜索数据
+   getSearch(){
+     this.$axios.get(`/search?key=${this.textInput}`)
+     .then(res => {
+       if(this.textInput === ''){
+         this.showSearch = false;
+       } else {
+         this.showSearch = true;
+       }
+       this.list = res.data.data;
+     })
+     .catch(err => {
+       console.log(err);
+     })
+   },
    userInput(){
+     //页面跳转携带参数
      this.$router.push(`/search/${this.textInput}`);
-     this.textInput = '';
    },
    //退出登陆
    outLogin(){
@@ -181,5 +210,13 @@ export default {
       top: -22px;
       left: 6px;
       color: #fff;
+    }
+    .search-box{
+      position: relative;
+    }
+    .search-list{
+      background: #f00;
+      position: absolute;
+      z-index: 999;
     }
 </style>
