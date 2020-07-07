@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Search />
         <Banner />
         <Icon />
         <MyImage />
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+import Search from '../components/index/search';
 import Banner from "../components/banner";
 import Icon from '../components/index/icon';
 import MyImage from '../components/index/Image';
@@ -17,6 +19,7 @@ import HotProduct from '../components/index/HotProduct';
 
 export default {
   components:{
+    Search,
     Banner,
     Icon,
     MyImage,

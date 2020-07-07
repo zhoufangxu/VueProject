@@ -11,24 +11,6 @@
       <el-menu-item index="3">朋友</el-menu-item>
       <el-menu-item index="4">商城</el-menu-item>
       <el-menu-item index="5">音乐人</el-menu-item>
-      <el-menu-item>
-        <div class="search-box">
-          <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
-          <ul class="search-list" v-if="showSearch">
-            <li v-for="(item, index) of list" :key="index">
-              <router-link to="#">{{item.lname}}</router-link>
-            </li>
-          </ul>
-        </div>
-          <span class="center" @click="goCart">
-            <i class="el-icon-shopping-cart-full"></i>
-            购物车
-            <div class="bubble">
-              <!-- 获取xuex中的购物车商品数量 -->
-              <span class="cart_count">{{$store.getters.optCartCount}}</span>
-            </div>
-          </span>
-      </el-menu-item>
         <el-menu-item class="userNameBox" v-show="isLogin">
             <router-link :to=" isLogin ? '/login' : '' ">
               <span class="login">登陆</span>
@@ -57,38 +39,11 @@ export default {
   data(){
     return {
       activeIndex: '1',
-      textInput: '',
       isLogin: true,
       userMsg: [],
-      list: [],
-      showSearch: false,
     };
   },
-  watch :{
-    textInput:function(){
-        this.getSearch();
-    }
-  },
   methods: {
-   //获取搜索数据
-   getSearch(){
-     this.$axios.get(`/search?key=${this.textInput}`)
-     .then(res => {
-       if(this.textInput === ''){
-         this.showSearch = false;
-       } else {
-         this.showSearch = true;
-       }
-       this.list = res.data.data;
-     })
-     .catch(err => {
-       console.log(err);
-     })
-   },
-   userInput(){
-     //页面跳转携带参数
-     this.$router.push(`/search/${this.textInput}`);
-   },
    //退出登陆
    outLogin(){
      this.$confirm('确定退出', '提示', {
@@ -113,10 +68,6 @@ export default {
            message: '已取消退出'
         });          
        });
-    },
-    //跳转购物车Btn
-    goCart(){
-     this.$router.push("/cart");
     },
   },
   created(){
@@ -159,27 +110,6 @@ export default {
     .img-style{
       height: 30px;
     }
-    .userInput{
-      border:none;
-      outline: none;
-      display: inline-block;
-      background-color: #e3e4e5;
-      height: 26px;
-      width: 130px;
-      border-radius: 100px;
-      padding-left: 10px;
-      margin-right: 15px;
-      margin-left: 10px;
-    }
-    .center{
-        margin-left: 10px;
-        border: 1px solid #e3e4e5;
-        padding: 6px 14px;
-        position: relative;
-    }
-    .center:hover{
-      border: 1px solid #f00;
-    }
     .login{
       font-size: 14px;
     }
@@ -194,29 +124,5 @@ export default {
     }
     .el-menu-item{
       text-align: center;
-    }
-    .bubble{
-      display:inline-block;
-      width: 20px;
-      height: 15px;
-      background: #f00;
-      border-radius: 20px;
-      position: absolute;
-      left: 27px;
-      top: 0;
-    }
-    .cart_count{
-      position: absolute;
-      top: -22px;
-      left: 6px;
-      color: #fff;
-    }
-    .search-box{
-      position: relative;
-    }
-    .search-list{
-      background: #f00;
-      position: absolute;
-      z-index: 999;
     }
 </style>
