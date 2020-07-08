@@ -2,12 +2,16 @@
     <div class="container">
         <div class="box">
             <div class="search-box">
-            <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput">
-            <ul class="search-list" v-if="showSearch">
-                <li v-for="(item, index) of list" :key="index">
-                <router-link to="#">{{item.lname}}</router-link>
-                </li>
-            </ul>
+                <div class="search-item">
+                     <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput" @keydown="changeTurn">
+                     <i class="el-icon-search" @click="userInput"></i>
+                </div>
+                <ul class="search-list" v-if="showSearch">
+                    <li v-for="(item, i) of list" :key="i" class="search-list-item" :class="i == index ? 'active' : ''" ref="search_item" :data-title="item.lname" :data-id="i">
+                        <router-link :to="`info/${item.lid}`">{{item.lname}}</router-link>
+                    </li>
+                    <span class="del-btn" @click="closeUl">关闭</span>
+                </ul>
             </div>
             <span class="center" @click="goCart">
                 <i class="el-icon-shopping-cart-full"></i>
@@ -27,13 +31,53 @@ export default {
         return {
             textInput: '',
             showSearch: false,
-             list: [],
+            list: [],
+            index: -1,
         }
     },
     methods:{
+      //键盘上下切换选中
+      changeTurn(e){
+        if (e.keyCode == 38){
+            this.selectVal();
+            if(this.index > 0){
+                this.index--;
+            }else{
+                this.index = this.list.length -1;
+            }
+        } else if (e.keyCode == 40){
+            this.index++;
+            if (this.index > this.list.length - 1){
+                this.index = 0;
+            }
+        }
+      },
+      //选中li内容赋值给textInput
+      selectVal(){
+          let arr = this.$refs.search_item;
+          console.log(arr);
+          for(var i = 0; i < arr.length; i++){
+              if(arr[i].className.indexOf('active') !== -1){
+                  console.log(arr[i].dataset.id);
+              }
+          }
+      },
+      //关闭模糊查询列表
+      closeUl(){
+          this.showSearch = false;
+      },
       userInput(){
-      //页面跳转携带参数
-       this.$router.push(`/search/${this.textInput}`);
+        //获取搜索关键词，服务端返回跳转到搜索页面
+        this.$axios.get(`/search?key=${this.textInput}`)
+        .then(res => {
+            if(res.data.code == 1){
+                this.$router.push(`/search/${this.textInput}`);
+            }
+            console.log(res);
+        })
+        .catch(err => {
+            console.log(err);
+        })
       },
       //跳转购物车Btn
       goCart(){
@@ -43,12 +87,13 @@ export default {
       getSearch(){
         this.$axios.get(`/search?key=${this.textInput}`)
         .then(res => {
-        if(this.textInput === ''){
-            this.showSearch = false;
-        } else {
-            this.showSearch = true;
-        }
-        this.list = res.data.data;
+            this.list = res.data.data;
+            //如果输入框内容为空，或者list.length为0时改为false
+            if(this.textInput === '' || this.list.length === 0){
+              this.showSearch = false;
+            } else {
+              this.showSearch = true;
+            }
         })
         .catch(err => {
         console.log(err);
@@ -74,14 +119,29 @@ export default {
         display: inline-block;
         padding-left: 10px;
         border: 2px solid #f00;
-        width: 400px;
+        width: 500px;
         height: 30px;
         color: #747474;
     }
+    .search-box{
+        position: relative;
+    }
     .search-list{
-        background: #f00;
+        border: 1px solid #bfbfbf;
+        top: 38px;
         position: absolute;
         z-index: 999;
+        background: #fff;
+        cursor: pointer;
+        width: 510px;
+    }
+    .search-list-item{
+        padding: 4px;
+        font-size: 13px;
+        line-height: 26px;
+    }
+    .search-list-item:hover{
+        background: #e1e1e1;
     }
     .center{
         margin-left: 10px;
@@ -109,14 +169,38 @@ export default {
         left: 6px;
         color: #fff;
     }
-    .search-box{
-        position: relative;
-    }
     .box{
         display: flex;
         padding: 10px;
         align-items: center;
         justify-content: center;
         margin-top: 10px;
+    }
+    .search-item{
+        display: flex;
+        align-items: center;
+    }
+    .search-item i{
+        background: #f00;
+        width: 40px;
+        height: 36px;
+        color: #fff;
+        font-size: 22px;
+        text-align: center;
+        line-height: 36px;
+        margin-left: -2px;
+    }
+    .del-btn{
+        display: block;
+        border-top: 1px solid #e1e1e1;
+        height: 28px;
+        color: #747474;
+        font-size: 13px;
+        line-height: 28px;
+        text-align: right;
+        padding-right: 10px;
+    }
+    .active{
+        background: rgba(250, 226, 90, 0.748);
     }
 </style>
