@@ -3,11 +3,11 @@
         <div class="box">
             <div class="search-box">
                 <div class="search-item">
-                     <input type="text" placeholder="音乐/电台/用户" class="userInput" v-model="textInput" @keyup.13="userInput" @keydown="changeTurn">
+                     <input type="text" placeholder="请输入您要搜索的商品" class="userInput" v-model="textInput" @keyup.13="userInput" @keydown="changeTurn" @input="getSearch">
                      <i class="el-icon-search" @click="userInput"></i>
                 </div>
                 <ul class="search-list" v-if="showSearch">
-                    <li v-for="(item, i) of list" :key="i" class="search-list-item" :class="i == index ? 'active' : ''" ref="search_item" :data-title="item.lname" :data-id="i">
+                    <li v-for="(item, i) of list" :key="i" class="search-list-item" :class="[index === i ? 'search_active' : '']" ref="search_item" :data-title="item.lname" :data-id="i">
                         <router-link :to="`info/${item.lid}`">{{item.lname}}</router-link>
                     </li>
                     <span class="del-btn" @click="closeUl">关闭</span>
@@ -21,7 +21,7 @@
                     <span class="cart_count">{{$store.getters.optCartCount}}</span>
                 </div>
             </span>
-        </div>
+        </div> 
     </div>
 </template>
 
@@ -39,26 +39,28 @@ export default {
       //键盘上下切换选中
       changeTurn(e){
         if (e.keyCode == 38){
-            this.selectVal();
-            if(this.index > 0){
-                this.index--;
+            if(this.index <= 0){
+                this.index = this.list.length - 1;
             }else{
-                this.index = this.list.length -1;
+                this.index--;
+                this.selectVal();
             }
         } else if (e.keyCode == 40){
-            this.index++;
-            if (this.index > this.list.length - 1){
+            if (this.index >= this.list.length - 1){
                 this.index = 0;
+            } else {
+                this.index++;
+                this.selectVal();
             }
         }
       },
       //选中li内容赋值给textInput
       selectVal(){
           let arr = this.$refs.search_item;
-          console.log(arr);
           for(var i = 0; i < arr.length; i++){
-              if(arr[i].className.indexOf('active') !== -1){
-                  console.log(arr[i].dataset.id);
+              if(arr[i].className.indexOf('search_active') !== -1){
+                  console.log(arr[i]);
+                  this.textInput = arr[i].dataset.title;
               }
           }
       },
@@ -83,27 +85,30 @@ export default {
       goCart(){
         this.$router.push("/cart");
       },
-    //获取搜索数据
+    //@input事件监听input的值获取搜索数据
       getSearch(){
-        this.$axios.get(`/search?key=${this.textInput}`)
-        .then(res => {
-            this.list = res.data.data;
-            //如果输入框内容为空，或者list.length为0时改为false
-            if(this.textInput === '' || this.list.length === 0){
-              this.showSearch = false;
-            } else {
-              this.showSearch = true;
-            }
-        })
-        .catch(err => {
-        console.log(err);
-        })
+          //此处节流
+          setTimeout(() => {
+             this.$axios.get(`/search?key=${this.textInput}`)
+            .then(res => {
+                this.list = res.data.data;
+                //如果输入框内容为空，或者list.length为0时改为false
+                if(this.textInput === '' || this.list.length === 0){
+                  this.showSearch = false;
+                } else {
+                  this.showSearch = true;
+                }
+            })
+            .catch(err => {
+              console.log(err);
+            }) 
+          }, 400);
       },
     },
     watch :{
-      textInput:function(){
-        this.getSearch();
-      }
+    //   textInput:function(){
+    //     this.getSearch();
+    //   }
   },
 }
 </script>
@@ -200,7 +205,7 @@ export default {
         text-align: right;
         padding-right: 10px;
     }
-    .active{
+    .search_active{
         background: rgba(250, 226, 90, 0.748);
     }
 </style>
