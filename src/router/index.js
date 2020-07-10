@@ -2,10 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from "../views/Login.vue";
-import Search from "../views/subViews/Search.vue";
+import Search from "../views/subViews/searchPage.vue";
 import Info from "../views/subViews/Info.vue";
 import Container from '../views/container.vue';
 import Cart from "../views/subViews/Cart.vue";
+import indexContainer from "../views/indexContainer";
 //解决重复点击路由报错问题
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location) {
@@ -18,14 +19,20 @@ Vue.use(VueRouter)
       component: Home,
       children: [
         {
-          path: '',
+          path: '/',
           component: Container,
+           children: [
+             {
+               path: '/',
+               component: indexContainer,
+             },
+              {
+                path: 'search',
+                name: 'search',
+                component: Search
+              },
+           ]
         },
-        {
-          path: 'search/:val',
-          name: 'search',
-          component: Search
-        }, 
         {
           path: 'info/:lid',
           name: 'info',

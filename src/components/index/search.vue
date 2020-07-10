@@ -7,8 +7,8 @@
                      <i class="el-icon-search" @click="userInput"></i>
                 </div>
                 <ul class="search-list" v-if="showSearch">
-                    <li v-for="(item, i) of list" :key="i" class="search-list-item" :class="[index === i ? 'search_active' : '']" ref="search_item" :data-title="item.lname" :data-id="i">
-                        <router-link :to="`info/${item.lid}`">{{item.lname}}</router-link>
+                    <li v-for="(item, i) of list" :key="i" @click="getValue" class="search-list-item" :class="[index === i ? 'search_active' : '']" ref="search_item" :data-title="item.lname" :data-id="i">
+                        {{item.lname}}
                     </li>
                     <span class="del-btn" @click="closeUl">关闭</span>
                 </ul>
@@ -18,7 +18,7 @@
                 购物车
                 <div class="bubble">
                     <!-- 获取xuex中的购物车商品数量 -->
-                    <span class="cart_count">{{$store.getters.optCartCount}}</span>
+                    <span class="cart_count">{{count}}</span>
                 </div>
             </span>
         </div> 
@@ -36,8 +36,17 @@ export default {
         }
     },
     methods:{
+      //获取列表中关键词，给this.textInput
+      getValue(e){
+          this.textInput = e.target.dataset.title;
+          this.userInput();
+      },
       //键盘上下切换选中
       changeTurn(e){
+        //如果输入框没有内容直接退出
+        if (this.textInput === '') {
+            return;
+        }
         if (e.keyCode == 38){
             if(this.index <= 0){
                 this.index = this.list.length - 1;
@@ -56,26 +65,26 @@ export default {
       },
       //选中li内容赋值给textInput
       selectVal(){
-          let arr = this.$refs.search_item;
-          for(var i = 0; i < arr.length; i++){
-              if(arr[i].className.indexOf('search_active') !== -1){
-                  console.log(arr[i]);
-                  this.textInput = arr[i].dataset.title;
-              }
-          }
+        //   let arr = this.$refs.search_item;
+        //   for(var i = 0; i < arr.length; i++){
+        //       if(arr[i].className.indexOf('search_active') !== -1){
+        //           console.log(arr[i]);
+        //           this.textInput = arr[i].dataset.title;
+        //       }
+        //   }
+        console.log(this.index);
       },
       //关闭模糊查询列表
       closeUl(){
           this.showSearch = false;
       },
       userInput(){
-        //获取搜索关键词，服务端返回跳转到搜索页面
+        //跳转到搜索页面
         this.$axios.get(`/search?key=${this.textInput}`)
         .then(res => {
             if(res.data.code == 1){
-                this.$router.push(`/search/${this.textInput}`);
+                this.$router.push({name:'search',params:{listInfo:res.data.data}});
             }
-            console.log(res);
         })
         .catch(err => {
             console.log(err);
@@ -110,6 +119,12 @@ export default {
     //     this.getSearch();
     //   }
   },
+  computed:{
+    //返回vuex中购物车商品数量
+    count(){
+        return this.$store.getters.optCartCount;
+    }
+  }
 }
 </script>
 
@@ -144,6 +159,7 @@ export default {
         padding: 4px;
         font-size: 13px;
         line-height: 26px;
+        color: #747474;
     }
     .search-list-item:hover{
         background: #e1e1e1;
