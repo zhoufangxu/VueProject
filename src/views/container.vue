@@ -6,6 +6,7 @@
         <MyImage />
         <Recommend />
         <HotProduct />
+        <Floor />
     </div>
 </template>
 
@@ -16,6 +17,7 @@ import Icon from '../components/index/icon';
 import MyImage from '../components/index/Image';
 import Recommend from "../components/index/recommend";
 import HotProduct from '../components/index/HotProduct';
+import Floor from "../components/index/floor";
 
 
 export default {
@@ -26,6 +28,7 @@ export default {
     MyImage,
     Recommend,
     HotProduct,
+    Floor,
   },    
 }
 </script>
