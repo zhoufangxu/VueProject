@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     cartCount: sessionStorage.getItem("cartCount") || 0,  //保存购物车图标显示数量
-    cartList: sessionStorage.getItem("cartList") || []  //保存购物车列表数据
+    cartList: sessionStorage.getItem("cartList") || [],  //保存购物车列表数据
+    userKey: sessionStorage.getItem("userKey") || '', //保存搜索框用户搜索关键词
   },
   mutations: {
     //购物车中数据加1  点击商品详细[加入购物]
@@ -24,7 +25,10 @@ export default new Vuex.Store({
       state.cartList = list;
       sessionStorage.setItem("cartList", list);
     },
-
+    upDataUserKey(state, key){
+      state.userKey = key;
+      sessionStorage.setItem("userKey", key);
+    },
     //更新购物车中产品数量
     upCartListCountAdd(state, i) {
       state.cartList[i].count += 1;
@@ -45,6 +49,10 @@ export default new Vuex.Store({
     //获取购物车列表数据
     getCartList(state) {
       return state.cartList;
+    },
+    //获取搜索框用户搜索关键词
+    getUserKey(state){
+      return state.userKey;
     }
   }
 })

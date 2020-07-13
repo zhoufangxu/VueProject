@@ -40,6 +40,7 @@ export default {
       getValue(e){
           this.textInput = e.target.dataset.title;
           this.userInput();
+          this.showSearch = false;
       },
       //键盘上下切换选中
       changeTurn(e){
@@ -65,14 +66,12 @@ export default {
       },
       //选中li内容赋值给textInput
       selectVal(){
-        //   let arr = this.$refs.search_item;
-        //   for(var i = 0; i < arr.length; i++){
-        //       if(arr[i].className.indexOf('search_active') !== -1){
-        //           console.log(arr[i]);
-        //           this.textInput = arr[i].dataset.title;
-        //       }
-        //   }
-        console.log(this.index);
+        let arr = this.$refs.search_item;
+        for(var i = 0; i < arr.length; i++){
+            if(arr[i].className.indexOf('search_active') !== -1){
+                this.textInput = arr[i].dataset.title;
+            }
+        }
       },
       //关闭模糊查询列表
       closeUl(){
@@ -80,15 +79,9 @@ export default {
       },
       userInput(){
         //跳转到搜索页面
-        this.$axios.get(`/search?key=${this.textInput}`)
-        .then(res => {
-            if(res.data.code == 1){
-                this.$router.push({name:'search',params:{listInfo:res.data.data}});
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.$router.push(`search`);
+        this.$emit('getList',this.list);
+        this.showSearch = false;
       },
       //跳转购物车Btn
       goCart(){
@@ -97,6 +90,7 @@ export default {
     //@input事件监听input的值获取搜索数据
       getSearch(){
           //此处节流
+          this.$store.commit("upDataUserKey",this.textInput);
           setTimeout(() => {
              this.$axios.get(`/search?key=${this.textInput}`)
             .then(res => {
@@ -111,7 +105,7 @@ export default {
             .catch(err => {
               console.log(err);
             }) 
-          }, 400);
+          }, 200);
       },
     },
     watch :{
@@ -123,6 +117,10 @@ export default {
     //返回vuex中购物车商品数量
     count(){
         return this.$store.getters.optCartCount;
+    },
+    //计算属性返回vuex中key
+    searchKey:function(){
+        return this.$store.getters.getUserKey;
     }
   }
 }
