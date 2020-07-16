@@ -7,7 +7,7 @@
                      <i class="el-icon-search" @click="userInput"></i>
                 </div>
                 <ul class="search-list" v-if="showSearch">
-                    <li v-for="(item, i) of list" :key="i" @click="getValue" class="search-list-item" :class="[index === i ? 'search_active' : '']" ref="search_item" :data-title="item.lname" :data-id="i">
+                    <li v-for="(item, i) of list" :key="i" @click="getValue" class="search-list-item" :class="[index === i ? 'search_active' : '']">
                         {{item.lname}}
                     </li>
                     <span class="del-btn" @click="closeUl">关闭</span>
@@ -49,29 +49,16 @@ export default {
             return;
         }
         if (e.keyCode == 38){
-            if(this.index <= 0){
-                this.index = this.list.length - 1;
-            }else{
-                this.index--;
-                this.selectVal();
-            }
+            this.index <= 0 ? this.index = this.list.length - 1 : this.index--;
+            this.selectVal();
         } else if (e.keyCode == 40){
-            if (this.index >= this.list.length - 1){
-                this.index = 0;
-            } else {
-                this.index++;
-                this.selectVal();
-            }
+            this.index >= this.list.length - 1 ? this.index = 0 : this.index++;
+            this.selectVal();
         }
       },
       //选中li内容赋值给textInput
       selectVal(){
-        let arr = this.$refs.search_item;
-        for(var i = 0; i < arr.length; i++){
-            if(arr[i].className.indexOf('search_active') !== -1){
-                this.textInput = arr[i].dataset.title;
-            }
-        }
+        this.textInput = this.list[this.index].lname;
       },
       //关闭模糊查询列表
       closeUl(){
