@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import {mapState, mapGetters} from 'vuex';
 export default {
     data(){
         return {
@@ -102,9 +103,7 @@ export default {
   },
   computed:{
     //返回vuex中购物车商品数量
-    count(){
-        return this.$store.getters.optCartCount;
-    },
+    ...mapGetters({count: 'optCartCount'}),
     //计算属性返回vuex中key
     searchKey:function(){
         return this.$store.getters.getUserKey;
